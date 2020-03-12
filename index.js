@@ -43,3 +43,12 @@ app.use((req, res, next) => {
   });
   next();
 });
+
+// This middleware measures the request duration with a Histogram
+app.use((req, res, next) => {
+  const end = requestDurationHistogram.startTimer();
+  res.on('finish', () => {
+    end({ method: req.method, status: res.statusCode });
+  });
+  next();
+});
