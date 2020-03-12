@@ -34,3 +34,12 @@ const requestDurationHistogram = new client.Histogram({
 // Set counters to zero on relevant label combinations
 requestDurationHistogram.observe({ method: "GET", status: '404' }, 0);
 requestDurationHistogram.observe({ method: 'GET', status: '500' }, 0);
+
+// This middleware measures the request duration with a Summary
+app.use((req, res, next) => {
+  const end = requestDurationSummary.startTimer();
+  res.on('finish', () => {
+    end({ method: req.method, status: res.statusCode });
+  });
+  next();
+});
