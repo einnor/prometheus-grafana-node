@@ -16,3 +16,7 @@ const requestDurationSummary = new client.Summary({
   labelNames: ['method', 'status'],
   percentiles: [0.5, 0.75, 0.9, 0.95, 0.99]
 });
+
+// Set counters to zero on relevant label combinations
+requestDurationSummary.observe({ method: 'GET', status: '404' }, 0);
+requestDurationSummary.observe({method: 'GET', status: '500' }, 0);
