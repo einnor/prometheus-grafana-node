@@ -1,9 +1,10 @@
 {
   "name": "prometheus-grafana-node",
   "version": "1.0.0",
-  "description": "",
+  "description": "Sample Node.js application for demoing Prometheus metrics and Grafana",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
