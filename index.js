@@ -67,3 +67,9 @@ app.get('/', async (req, res) => {
   res.set('Content-Type', 'application/json');
   res.send({ message: 'Looking good!' });
 });
+
+// Expose the collected metrics via the /metrics endpoint
+app.get('/metrics', (req, res) => {
+  res.set('Content-Type', 'text/plain');
+  res.send(register.metrics());
+});
