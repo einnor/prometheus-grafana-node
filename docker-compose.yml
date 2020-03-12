@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  sample-app:
+    build: ./
+    ports:
+      - 4000:4000
+    restart: on-failure
+    volumes:
+      - ./:/usr/src/app
+
+  # Prometheus is a monitoring and time-series database
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    restart: on-failure
+    ports:
+      - 9090:9090
+    command: --config.file=/etc/prometheus/config/prometheus.yml
+    volumes:
+      - ./config/prometheus/:/etc/prometheus/config/
+
+  # Alertmanager is the component responsible for de-duplicating and sending
+  # alerts via different backends (i.e. PagerDuty, Slack, etc)
+  alertmanager:
+    image: prom/alertmanager
+    restart: on-failure
+    ports:
+      - 9093:9093
+
+  # Grafana can be used for creating nice dashboards based on the data stored
+  # in Prometheus
+  grafana:
+    image: grafana/grafana
+    restart: on-failure
+    environment:
+      GF_LOG_LEVEL: debug
+    volumes:
+      - ./config/grafana/datasource.yml:/etc/grafana/provisioning/datasources/prometheus.yml
+      - ./config/grafana/dashboard-providers.yml:/etc/grafana/provisioning/dashboards/dashboard-providers.yml
+      - ./config/grafana/dashboards/:/var/lib/grafana/dashboards/
+    ports:
+      - 3000:3000
+    depends_on:
+      - prometheus
