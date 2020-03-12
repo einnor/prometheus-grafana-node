@@ -1,13 +1,17 @@
 var express = require('express');
 var client = require('prom-client');
+const gcStats = require('prometheus-gc-stats');
 
 var app = express();
 
-const { collectDefaultMetrics, Registry } = client;
-const register = new Registry();
+const { collectDefaultMetrics, register } = client;
 
 // Collect Node.js metrics
-collectDefaultMetrics({ register });
+collectDefaultMetrics({ timeout: 5000 });
+
+// Collect GC metrics from Node.js
+const startGcStats = gcStats(client.register);
+startGcStats();
 
 // Summary metric for measuring request durations
 const requestDurationSummary = new client.Summary({
@@ -75,4 +79,4 @@ app.get('/metrics', (req, res) => {
 });
 
 // Start the server
-app.listen(4000);
+app.listen(4000, () => console.log('Running on port 4000'));
