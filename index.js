@@ -73,3 +73,6 @@ app.get('/metrics', (req, res) => {
   res.set('Content-Type', 'text/plain');
   res.send(register.metrics());
 });
+
+// Start the server
+app.listen(4000);
