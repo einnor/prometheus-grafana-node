@@ -52,3 +52,18 @@ app.use((req, res, next) => {
   });
   next();
 });
+
+// Main route
+app.get('/', async (req, res) => {
+  // Simulate a 1s delay in ~5% of all requests
+  if (Math.random() <= 0.05) {
+    const sleep = (ms) => {
+      return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+      });
+    };
+    await sleep(1000);
+  }
+  res.set('Content-Type', 'application/json');
+  res.send({ message: 'Looking good!' });
+});
